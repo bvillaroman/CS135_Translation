@@ -31,7 +31,10 @@ class Sentence{
         // retrieves the vItems vector
         vector<vItem> getVitems();
         // overides the == operator to compare a vItem's pos and a string that is a pos 
-        friend bool operator ==(vItem v1,string pos);    
+        friend bool operator ==(vItem v1,string pos);  
+    
+        // the functions below are what TRANSLATES a vItem's word property, by looking         // through their POS 
+    
         // finds the verb word in vItems and returns the translated vItem,if its is: if its a question then add the adjective to the "word" member, if its declrative then add adjective to the word member. Return the vItem with the new word
         vItem transVerb();
         // finds the subject word,adds its adjectives before it to the vItem.word and returns the translated vItem;
@@ -58,13 +61,14 @@ class Corpus{
         vector<Sentence> getText();
         // *** TASK 1 ****:
         // OVERLOADS THE INPUT OPERATOR TO INPUT THE SENTENCES IN TEXT TO THE IS STREAM
-        // *** TASK 1 ****
         friend istream& operator >>(istream& is,Corpus& corp);
+        // *** TASK 1 ****
+    
         // *** TASK 3 ***:
         // OVERLOADS THE OUTPUT OPERATOR TO STUFF THE TRANSLATED SENTENCES FROM
-        // text[index].translate() INTO THE OS STREAM
-        // ** TASK 3 **
+        // corp.text sentences INTO THE OS STREAM
         friend ostream& operator <<(ostream& os,Corpus corp);
+        // ** TASK 3 **
 
         void addText(Sentence S);
         
@@ -82,7 +86,7 @@ Corpus populateEngPP(Corpus corp,vector<vItem> v);
 vector<vItem> translate(Sentence sent);
 int main(){
     int size=0;
-    Corpus Atest,EngPP;
+    Corpus ENGmm,EngPP;
     Sentence test ;
     ifstream text;
     ofstream transF;
@@ -115,9 +119,10 @@ int main(){
     populateArray(a,size);
     populateArray(the,size);
     
-    text >> Atest ;
-
-    EngPP = populateEngPP(Atest,translate(Atest.getText()[0]));
+    text >> ENGmm ;
+    
+    //STARTS THE POPPULATING THE ENG++ SENTENCES BY TRANSLATING THE FIRST SENTENCE OBJECT IN ENGmm.TEXT property 
+    EngPP = populateEngPP(ENGmm,translate(ENGmm.getText()[0]));
     transF << EngPP; 
     
     text.close();
@@ -346,6 +351,8 @@ bool Sentence::checkI(){
 vector<Sentence> Corpus::getText(){
     return text;  
 }
+
+//TASK 1: OVERLOD THE INPUT STREAM OPERATOR
 istream& operator >>(istream& is,Corpus& corp){
     string tempS;
     Sentence Temp;
@@ -363,6 +370,8 @@ istream& operator >>(istream& is,Corpus& corp){
 
     return is;
 }
+
+//TASK 3 : OVERLOAD THE OUTPUT STREAM OPERATOR TO OUTPUT THE CORP.TEXT SENTENCES INTO THE OS STREAM
 ostream& operator <<(ostream& os,Corpus corp){
         // recads the whole text vector
         for(int i = 0; i < corp.text.size() ; i++){
@@ -381,7 +390,7 @@ void Corpus::addText(Sentence S){
     text.push_back(S);
 }
 
-// PART 0 FUNCTION POPULATION ARRAY
+// TASK 0 FUNCTION POPULATION ARRAY
 // takes in 3 parameters : a vItem, and array filled with vItems, and the size of that array
 void populateArray(vItem In,int &size){
     size++;
@@ -415,7 +424,9 @@ void populateArray(vItem In,int &size){
         
     
 }
-// part 1 FUNCTION POPULATE ENGPP
+
+
+// transaltes a sentence object into eng++
 vector<vItem> translate(Sentence sent){
     vector<vItem> returnV;
     
@@ -436,6 +447,8 @@ vector<vItem> translate(Sentence sent){
     
 }
 
+//  ***** TASK 2 ********
+// takes in a Corpus object and a vector of vItems, and creates a new sent object, adds that sentence to a new corpus's text property, then, while new corpus's text size is less than the input corpus's size , translate each sentence object in corp.getText(), and put it in returnC's text property, then return the newly made corpus.
 Corpus populateEngPP(Corpus corp,vector<vItem> v){
     Corpus returnC;
     Sentence Temp;
